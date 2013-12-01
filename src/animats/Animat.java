@@ -125,6 +125,7 @@ public class Animat {
 	{
 		g.setColor(color);
 		g.fillOval(x, y, size, size);
+		//test
 	}
 
 }
