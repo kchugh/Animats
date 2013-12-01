@@ -1,0 +1,87 @@
+package animats;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.util.List;
+import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class AnimatPanel extends JPanel implements ActionListener{
+
+	private List<Animat> animats = new ArrayList<Animat>();
+	private ArrayList<Food> foodList = new ArrayList<Food>();
+	
+	public AnimatPanel()
+	{
+		super();
+		setPreferredSize(new Dimension(400,400));
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                if (AnimatPanel.this == e.getComponent()) {
+                    for (Animat animat : animats) {
+                        animat.setBounds(getWidth(), getHeight());
+                    }
+                }
+            }
+        });	
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		g.setColor(Color.BLACK);
+		g.drawRect(0, 0, getWidth(), getHeight());
+		for(Animat animat: animats)
+			animat.draw(g);
+		for(Food food:foodList)
+			food.draw(g);
+	}
+	
+	public void addMalePrey()
+	{
+		animats.add(new Animat(Color.BLUE,35,this,10,10,getWidth(), getHeight()));
+	}
+	
+	public void addFemalePrey()
+	{
+		animats.add(new Animat(Color.PINK,35,this,10,10,getWidth(), getHeight()));
+	}
+	
+	public void addChildPrey()
+	{
+		animats.add(new Animat(Color.BLUE,20,this,10,10,getWidth(), getHeight()));
+	}
+	
+	public void addPredator()
+	{
+		animats.add(new Animat(Color.RED,35,this,10,10,getWidth(), getHeight()));
+	}
+
+	public void addFood()
+	{
+		Random generator = new Random();
+		int foodX = generator.nextInt(getWidth());
+		int foodY = generator.nextInt(getHeight());
+		System.out.println(foodX+","+foodY);
+		foodList.add(new Food(this,foodX,foodY));
+		System.out.println("Before repaint");
+		repaint();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		for(Animat animat : animats)
+		{
+			animat.moveAnimat(foodList);
+		}
+		repaint();	
+	}
+}
