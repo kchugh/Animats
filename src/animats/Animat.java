@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ public class Animat {
 	static final int Allowed_Distance_Animat=30;
 	static final int[] directionX={1,1,-1,0,-1,1,0,-1};
 	static final int[] directionY={1,-1,-1,1,1,0,-1,0};
+	Input each_input=new Input();
 	boolean fowardX=true;
 	boolean fowardY=true;
 	int size;
@@ -43,8 +45,7 @@ public class Animat {
 		//TODO: Incorporate Hunger Level
 		if(AnimatPanel.foodList != null && !AnimatPanel.foodList.isEmpty())
 	     {
-			Location foodlocation=getNearest(AnimatPanel.foodList);
-			System.out.println(foodlocation.x+" "+foodlocation.y);
+			Location foodlocation=getNearest(AnimatPanel.foodList,1);			
 //	             if(foodlocation!=null)
 //	                     moveTowardsFood((Food)foodlocation);
 //	             else
@@ -59,15 +60,14 @@ public class Animat {
 		
 	}
 	 
-	Location getNearest(ArrayList<Food> input)
+	Location getNearest(ArrayList<?> input,int type)
 	{
 		double max=Integer.MAX_VALUE;
 		Location ref=null;
-		for(Food each:input)
+		for(Object each:input)
 		{
-			Location temp=each;
-			double distance=Math.sqrt((Math.pow((x-temp.x),2)+Math.pow((y-temp.y),2)));
-			System.out.println("----------In FOod"+temp.x+" "+temp.y+"Distance"+distance);
+			Location temp=(Location)each;
+			double distance= computeDistance(temp);
 			if(distance<max)
 			{
 				ref=temp;
@@ -77,6 +77,10 @@ public class Animat {
 		return ref;
 	}
 	
+	double computeDistance(Location temp)
+	{
+		return Math.sqrt((Math.pow((x-temp.x),2)+Math.pow((y-temp.y),2)));
+	}
 	private void moveAnimatRandomly()
 	{
 		Point nextPoint=getDirection(new Point(x,y), maxX, maxY, 0, 0);
