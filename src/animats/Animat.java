@@ -50,11 +50,16 @@ public class Animat extends Location {
 		if(AnimatPanel.foodList != null && !AnimatPanel.foodList.isEmpty())
 	     {
 			getAndSetNearest(AnimatPanel.foodList,1);			
-//	             if(foodlocation!=null)
-//	                     moveTowardsFood((Food)foodlocation);
-//	             else
-//	                     moveAnimatRandomly();
-	     }
+			getAndSetNearest(AnimatPanel.predatorList,2);
+			getAndSetNearest(AnimatPanel.yellFoodSource,3);
+			getAndSetNearest(AnimatPanel.yellPredatorSource,4);
+			if(color==Color.BLUE)
+				getAndSetNearest(AnimatPanel.femaleAnimat,5);
+			else if(color==Color.PINK)
+				getAndSetNearest(AnimatPanel.maleAnimat,5);
+			each_input.display();
+    	                     moveAnimatRandomly();
+     }
 	     else
 	     {
 	             moveAnimatRandomly();
@@ -106,14 +111,14 @@ public class Animat extends Location {
 			if(max<YELL_RUN_SEARCHABLE_RADIUS)
 				setDirections(each_input.runSignalSource,ref,YELL_RUN_SEARCHABLE_RADIUS);
 			else
-				resetDirections(each_input.yellSignalSource);
+				resetDirections(each_input.runSignalSource);
 			break;
 			}
 		case 5:{
 			if(max<MATE_SEARCHABLE_RADIUS)
 				setDirections(each_input.nearestMate,ref,MATE_SEARCHABLE_RADIUS);
 			else
-				resetDirections(each_input.yellSignalSource);
+				resetDirections(each_input.nearestMate);
 			break;
 			}
 		}
@@ -163,9 +168,9 @@ public class Animat extends Location {
 	}
 	double computeWest(Location location)
 	{
-		if(location.x>x)
+		if(location.x<x)
 		{
-			return location.x-x;
+			return -1*(location.x-x);
 		}
 		else
 		{

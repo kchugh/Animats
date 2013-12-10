@@ -5,6 +5,10 @@ public class Direction {
 	double south=0.0;
 	double west=0.0;
 	double east=0.0;
+	String display()
+	{
+		return north+","+south+","+west+","+east;
+	}
 	void setNorth(double val)
 	{
 		north=val;
