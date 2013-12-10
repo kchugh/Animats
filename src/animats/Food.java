@@ -5,12 +5,10 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 
-public class Food {
+public class Food extends Location{
 
 	static final int SIZE = 20;
 	JPanel panel;
-	int x;
-	int y;
 	int maxX;
 	int maxY;
 	int amount = SIZE*SIZE;
@@ -30,6 +28,7 @@ public class Food {
 	public void draw(Graphics g)
 	{
 		g.setColor(Color.GREEN);
-		g.fillRect(x, y, SIZE, SIZE);
+		g.fillRect(this.x, this.y, SIZE, SIZE);
+		g.drawString(x+""+y, x, y);
 	}
 }

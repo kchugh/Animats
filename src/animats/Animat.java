@@ -38,21 +38,43 @@ public class Animat {
 		this.maxX = maxX; this.maxY = maxY;
 	}
 	
-	public void moveAnimat(ArrayList<Food> foodList)
+	public void moveAnimat()
 	{
+		//TODO: Incorporate Hunger Level
+		if(AnimatPanel.foodList != null && !AnimatPanel.foodList.isEmpty())
+	     {
+			Location foodlocation=getNearest(AnimatPanel.foodList);
+			System.out.println(foodlocation.x+" "+foodlocation.y);
+//	             if(foodlocation!=null)
+//	                     moveTowardsFood((Food)foodlocation);
+//	             else
+//	                     moveAnimatRandomly();
+	     }
+	     else
+	     {
+	             moveAnimatRandomly();
+	     }
 		
-		if(foodList != null && !foodList.isEmpty())
+		
+		
+	}
+	 
+	Location getNearest(ArrayList<Food> input)
+	{
+		double max=Integer.MAX_VALUE;
+		Location ref=null;
+		for(Food each:input)
 		{
-			Food closestFood = checkNearFood(foodList, x, y);
-			if(closestFood!=null)
-				moveTowardsFood(closestFood);
-			else
-				moveAnimatRandomly();
+			Location temp=each;
+			double distance=Math.sqrt((Math.pow((x-temp.x),2)+Math.pow((y-temp.y),2)));
+			System.out.println("----------In FOod"+temp.x+" "+temp.y+"Distance"+distance);
+			if(distance<max)
+			{
+				ref=temp;
+				max=distance;
+			}
 		}
-		else
-		{
-			moveAnimatRandomly();
-		}
+		return ref;
 	}
 	
 	private void moveAnimatRandomly()
@@ -94,7 +116,7 @@ public class Animat {
 					}
 				}
 			}
-			System.out.println(potentialCandidates.size());
+			//System.out.println(potentialCandidates.size());
 			return potentialCandidates.get(r.nextInt(potentialCandidates.size()));
 		
 	}

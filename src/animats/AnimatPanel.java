@@ -11,6 +11,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
@@ -70,9 +71,9 @@ public class AnimatPanel extends JPanel implements ActionListener{
 		Random generator = new Random();
 		int foodX = generator.nextInt(getWidth());
 		int foodY = generator.nextInt(getHeight());
-		System.out.println(foodX+","+foodY);
+		//System.out.println(foodX+","+foodY);
 		foodList.add(new Food(this,foodX,foodY));
-		System.out.println("Before repaint");
+		//System.out.println("Before repaint");
 		repaint();
 	}
 	
@@ -80,7 +81,7 @@ public class AnimatPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		for(Animat animat : animats)
 		{
-			animat.moveAnimat(foodList);
+			animat.moveAnimat();
 		}
 		repaint();	
 	}
