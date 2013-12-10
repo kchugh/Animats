@@ -275,6 +275,31 @@ public class Animat extends Location {
 		return result;
 	}
 	
+	
+	private boolean[] gettingMaxIndicesFromOutput(double[] output )
+	{
+		boolean[] to_be_returned=new boolean[output.length];
+		double max=output[0];
+		int index=0;
+		for(int i=1;i<output.length;i++)
+		{
+			if(max<output[i])
+			{
+				index=i;
+				max=output[i];
+			}
+		}
+		to_be_returned[index]=true;
+		for(int i=0;i<output.length;i++)
+		{
+			if((max-output[i])<=0.001)
+			{
+				to_be_returned[i]=true;
+			}
+		}
+		return to_be_returned;		
+	}
+	
 	private Food checkNearFood(ArrayList<Food> foodList, int x, int y)
 	{
 		//check if the current position of the animat is within a circular area
