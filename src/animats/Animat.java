@@ -182,6 +182,14 @@ public class Animat {
 	
 	private void moveTowardsFood(Food food)
 	{
+		//if distance between food and animat is less than 5 units, eat and yell food
+		double animatFoodDist = Math.sqrt(Math.pow(x-food.x,2) + Math.pow(y-food.y,2));
+		if(animatFoodDist <= 5)
+		{
+			eatFood();
+			yellFood(food);
+		}
+		
 		System.out.println("Move near food");
 		if(x-food.x!=0 && y-food.y!=0)
 		{
@@ -233,6 +241,15 @@ public class Animat {
 	{
 		g.setColor(color);
 		g.fillOval(x, y, size, size);
+	}
+	
+	public void eatFood(){
+	
+	}
+		
+	public void yellFood(Food food)
+	{
+		AnimatPanel.yellFoodSource.add(food);
 	}
 
 }
