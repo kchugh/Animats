@@ -3,11 +3,16 @@ package animats;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import javax.swing.JPanel;
+
+import org.neuroph.core.NeuralNetwork;
+import org.neuroph.core.data.DataSet;
+import org.neuroph.nnet.MultiLayerPerceptron;
 
 public class Animat extends Location {
 
@@ -28,8 +33,10 @@ public class Animat extends Location {
 	int size;
 	int maxX, maxY;
 	int speedX = SPEED, speedY = SPEED;
+	double hungerValue = 0.0;
+	
 	JPanel panel;
-	Animat(Color c, int size, JPanel panel, int x, int y, int maxX, int maxY)
+	Animat(Color c, int size, JPanel panel, int x, int y, int maxX, int maxY, double hungerValue)
 	{
 		this.color = c;
 		this.size = size;
@@ -38,6 +45,7 @@ public class Animat extends Location {
 		this.y = y;
 		this.maxX = maxX;
 		this.maxY = maxY;
+		this.hungerValue = hungerValue;
 	}
 	public void setBounds(int maxX, int maxY)
 	{
@@ -47,25 +55,46 @@ public class Animat extends Location {
 	public void moveAnimat()
 	{
 		//TODO: Incorporate Hunger Level
-		if(AnimatPanel.foodList != null && !AnimatPanel.foodList.isEmpty())
-	     {
-			getAndSetNearest(AnimatPanel.foodList,1);			
-			getAndSetNearest(AnimatPanel.predatorList,2);
-			getAndSetNearest(AnimatPanel.yellFoodSource,3);
-			getAndSetNearest(AnimatPanel.yellPredatorSource,4);
-			if(color==Color.BLUE)
-				getAndSetNearest(AnimatPanel.femaleAnimat,5);
-			else if(color==Color.PINK)
-				getAndSetNearest(AnimatPanel.maleAnimat,5);
-			each_input.display();
-    	                     moveAnimatRandomly();
-     }
-	     else
-	     {
-	             moveAnimatRandomly();
-	     }
 		
+		getAndSetNearest(AnimatPanel.foodList,1);			
+		getAndSetNearest(AnimatPanel.predatorList,2);
+		getAndSetNearest(AnimatPanel.yellFoodSource,3);
+		getAndSetNearest(AnimatPanel.yellPredatorSource,4);
+		if(color==Color.BLUE)
+			getAndSetNearest(AnimatPanel.femaleAnimat,5);
+		else if(color==Color.PINK)
+			getAndSetNearest(AnimatPanel.maleAnimat,5);
+		each_input.display();
 		
+		//Load Trained Neural Network
+		NeuralNetwork neuralNet = NeuralNetwork.load("trained_model/NeuralNetAnimats.nnet");
+		//set input to be fed to neural network
+		double[] input = {each_input.nearestFood.north,
+				each_input.nearestFood.south,
+				each_input.nearestFood.west,
+				each_input.nearestFood.east,
+				each_input.nearestPredator.north,
+				each_input.nearestPredator.south,
+				each_input.nearestPredator.west,
+				each_input.nearestPredator.east,
+				each_input.nearestMate.north,
+				each_input.nearestMate.south,
+				each_input.nearestMate.west,
+				each_input.nearestMate.east,
+				each_input.yellSignalSource.north,
+				each_input.yellSignalSource.south,
+				each_input.yellSignalSource.west,
+				each_input.yellSignalSource.east,
+				each_input.runSignalSource.north,
+				each_input.runSignalSource.south,
+				each_input.runSignalSource.west,
+				each_input.runSignalSource.east,
+				this.hungerValue};
+		neuralNet.setInput(input);
+		neuralNet.calculate();
+		double[] networkOutput = neuralNet.getOutput();
+		System.out.println(" Output: " + Arrays.toString(networkOutput));
+		moveAnimatRandomly();
 		
 	}
 	 

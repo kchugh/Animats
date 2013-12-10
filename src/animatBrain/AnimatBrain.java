@@ -52,7 +52,7 @@ public class AnimatBrain implements LearningEventListener{
 
         System.out.println("Saving network");
         // save neural network to file
-        neuralNet.save("MyNeuralNetAnimals.nnet");
+        neuralNet.save("trained_model/NeuralNetAnimats.nnet");
 
         System.out.println("Done.");
 	}

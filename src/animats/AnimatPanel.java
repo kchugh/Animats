@@ -54,25 +54,25 @@ public class AnimatPanel extends JPanel implements ActionListener{
 	
 	public void addMalePrey()
 	{
-		Animat newAnimat = new Animat(Color.BLUE,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight());
+		Animat newAnimat = new Animat(Color.BLUE,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight(), Math.random());
 		animats.add(newAnimat);
 		maleAnimat.add(newAnimat);	
 	}
 	
 	public void addFemalePrey()
 	{
-		Animat newAnimat = new Animat(Color.PINK,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight());
+		Animat newAnimat = new Animat(Color.PINK,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight(), Math.random());
 		animats.add(newAnimat);
 	}
 	
 	public void addChildPrey()
 	{
-		animats.add(new Animat(Color.BLUE,20,this,10,10,getWidth(), getHeight()));
+		animats.add(new Animat(Color.BLUE,20,this,10,10,getWidth(), getHeight(), Math.random()));
 	}
 	
 	public void addPredator()
 	{
-		Animat newAnimat = new Animat(Color.RED,35,this,10,10,getWidth(), getHeight());
+		Animat newAnimat = new Animat(Color.RED,35,this,10,10,getWidth(), getHeight(), 0.0);
 		animats.add(newAnimat);
 		predatorList.add(newAnimat);
 	}
