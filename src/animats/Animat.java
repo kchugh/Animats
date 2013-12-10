@@ -3,6 +3,8 @@ package animats;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -10,6 +12,12 @@ public class Animat {
 
 	Color color;
 	static final int SPEED = 1;
+	static final int Allowed_Distance=5;
+	static final int Allowed_Distance_Animat=30;
+	static final int[] directionX={1,1,-1,0,-1,1,0,-1};
+	static final int[] directionY={1,-1,-1,1,1,0,-1,0};
+	boolean fowardX=true;
+	boolean fowardY=true;
 	int size;
 	int x,y;
 	int maxX, maxY;
@@ -49,13 +57,87 @@ public class Animat {
 	
 	private void moveAnimatRandomly()
 	{
-		x += speedX;
-		y += speedY;
+		Point nextPoint=getDirection(new Point(x,y), maxX, maxY, 0, 0);
+		x = nextPoint.x;
+		y = nextPoint.y;
     
-		if (x<0) { speedX=-speedX; x=0; }
-		if (y<0) { speedY=-speedY; y=0; }
-		if (x+size>maxX) { speedX=-speedX; x=maxX-size; }
-		if (y+size>maxY) { speedY=-speedY; y=maxY-size; }
+		if (x<=0) { speedX=-speedX; x=0; fowardX=true;}
+		if (y<=0) { speedY=-speedY; y=0; fowardY=true;}
+		if (x+size>maxX) { speedX=-speedX; x=maxX-size; fowardX=false;}
+		if (y+size>maxY) { speedY=-speedY; y=maxY-size;fowardY=false; }
+	}
+	
+	Point getDirection(Point currentLocation,int maxX,int maxY,int minX,int minY)
+	{
+		ArrayList<Point> potentialCandidates=new ArrayList<Point>();
+		Random r=new Random();
+		
+			for(int i=0;i<directionX.length;i++)
+			{
+				Point check=null;
+				if(fowardX&&directionX[i]>=0&&fowardY&&directionY[i]>=0)
+				{		check=new Point(currentLocation.x+(directionX[i]*speedX),currentLocation.y+(directionY[i]*speedY));
+				}
+				else if(!fowardX&&directionX[i]<=0&&fowardY&&directionY[i]>=0)
+				{		check=new Point(currentLocation.x+(directionX[i]*speedX),currentLocation.y+(directionY[i]*speedY));
+				}
+				else if(fowardX&&directionX[i]>=0&&!fowardY&&directionY[i]<=0)
+				{		check=new Point(currentLocation.x+(directionX[i]*speedX),currentLocation.y+(directionY[i]*speedY));
+				}
+				else if(!fowardX&&directionX[i]<=0&&!fowardY&&directionY[i]<=0)
+				{		check=new Point(currentLocation.x+(directionX[i]*speedX),currentLocation.y+(directionY[i]*speedY));
+				}
+				if(check!=null)
+				{	if(checkEdgeCase(check,maxX,maxY,minX,minY)&&checkIfOccupied(check))
+					{
+						potentialCandidates.add(check);
+					}
+				}
+			}
+			System.out.println(potentialCandidates.size());
+			return potentialCandidates.get(r.nextInt(potentialCandidates.size()));
+		
+	}
+	boolean checkEdgeCase(Point p,int maxX,int maxY,int minX,int minY)
+	{
+		if(p.x<minX||p.x>maxX||p.y>maxY||p.y<minY)
+			return false;	
+		return true;
+	}
+
+	boolean checkIfOccupied(Point p)
+	{
+		if(isFood(p))
+			return false;
+		if(isAnimat(p))
+			return false;
+		return true;
+	}
+	boolean isAnimat(Point p)
+	{
+		List<Animat> checkAnimatArrayList=AnimatPanel.animats;
+		boolean result=false;
+		for(Animat eachFood:checkAnimatArrayList )
+		{
+			if(Math.abs(p.x-eachFood.x)<Allowed_Distance_Animat&&Math.abs(p.y-eachFood.y)<Allowed_Distance_Animat&&!eachFood.equals(this))
+			{
+				result=true;
+			}
+		}
+		return result;
+	}
+	boolean isFood(Point p)
+	{
+		ArrayList<Food> checkFoodArrayList=FoodPanel.foodList;
+		boolean result=false;
+		for(Food eachFood:checkFoodArrayList )
+		{
+			if(Math.abs(p.x-eachFood.x)<Allowed_Distance&&Math.abs(p.y-eachFood.y)<Allowed_Distance)
+			{
+				result=true;
+			}
+		}
+		return result;
 	}
 	
 	private Food checkNearFood(ArrayList<Food> foodList, int x, int y)
@@ -125,7 +207,6 @@ public class Animat {
 	{
 		g.setColor(color);
 		g.fillOval(x, y, size, size);
-		//test
 	}
 
 }

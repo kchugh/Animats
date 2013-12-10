@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class FoodPanel extends AnimatPanel implements ActionListener{
 
-	private static ArrayList<Food> foodList = new ArrayList<Food>();
+	public static ArrayList<Food> foodList = new ArrayList<Food>();
 	
 	public ArrayList<Food> getFoodList() {
 		return foodList;

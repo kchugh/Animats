@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class AnimatPanel extends JPanel implements ActionListener{
 
-	private List<Animat> animats = new ArrayList<Animat>();
-	private ArrayList<Food> foodList = new ArrayList<Food>();
-	
+	public static List<Animat> animats = new ArrayList<Animat>();
+	public static ArrayList<Food> foodList = new ArrayList<Food>();
+	private static Random randomGenerator=new Random(); 
 	public AnimatPanel()
 	{
 		super();
@@ -47,12 +47,12 @@ public class AnimatPanel extends JPanel implements ActionListener{
 	
 	public void addMalePrey()
 	{
-		animats.add(new Animat(Color.BLUE,35,this,10,10,getWidth(), getHeight()));
+		animats.add(new Animat(Color.BLUE,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight()));
 	}
 	
 	public void addFemalePrey()
 	{
-		animats.add(new Animat(Color.PINK,35,this,10,10,getWidth(), getHeight()));
+		animats.add(new Animat(Color.PINK,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight()));
 	}
 	
 	public void addChildPrey()
