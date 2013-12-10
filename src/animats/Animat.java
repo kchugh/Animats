@@ -109,7 +109,7 @@ public class Animat extends Location {
 				resetDirections(each_input.yellSignalSource);
 			break;
 			}
-		case 4:{
+		case 5:{
 			if(max<MATE_SEARCHABLE_RADIUS)
 				setDirections(each_input.nearestMate,ref,MATE_SEARCHABLE_RADIUS);
 			else
