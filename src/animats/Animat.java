@@ -9,10 +9,15 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-public class Animat {
+public class Animat extends Location {
 
 	Color color;
 	static final int SPEED = 1;
+	static final int FOOD_SEARCHABLE_RADIUS = 100;
+	static final int PREDATOR_SEARCHABLE_RADIUS = 100;
+	static final int YELL_FOOD_SEARCHABLE_RADIUS = 100;
+	static final int YELL_RUN_SEARCHABLE_RADIUS = 100;
+	static final int MATE_SEARCHABLE_RADIUS=100;
 	static final int Allowed_Distance=5;
 	static final int Allowed_Distance_Animat=30;
 	static final int[] directionX={1,1,-1,0,-1,1,0,-1};
@@ -21,7 +26,6 @@ public class Animat {
 	boolean fowardX=true;
 	boolean fowardY=true;
 	int size;
-	int x,y;
 	int maxX, maxY;
 	int speedX = SPEED, speedY = SPEED;
 	JPanel panel;
@@ -45,7 +49,7 @@ public class Animat {
 		//TODO: Incorporate Hunger Level
 		if(AnimatPanel.foodList != null && !AnimatPanel.foodList.isEmpty())
 	     {
-			Location foodlocation=getNearest(AnimatPanel.foodList,1);			
+			getAndSetNearest(AnimatPanel.foodList,1);			
 //	             if(foodlocation!=null)
 //	                     moveTowardsFood((Food)foodlocation);
 //	             else
@@ -60,7 +64,7 @@ public class Animat {
 		
 	}
 	 
-	Location getNearest(ArrayList<?> input,int type)
+	void getAndSetNearest(ArrayList<?> input,int type)
 	{
 		double max=Integer.MAX_VALUE;
 		Location ref=null;
@@ -74,7 +78,107 @@ public class Animat {
 				max=distance;
 			}
 		}
-		return ref;
+		switch(type)
+		{
+		
+		case 1:{
+			if(max<FOOD_SEARCHABLE_RADIUS)
+				setDirections(each_input.nearestFood,ref,FOOD_SEARCHABLE_RADIUS);
+			else
+				resetDirections(each_input.nearestFood);
+			break;
+			}
+		case 2:{
+			if(max<PREDATOR_SEARCHABLE_RADIUS)
+				setDirections(each_input.nearestPredator,ref,PREDATOR_SEARCHABLE_RADIUS);
+			else
+				resetDirections(each_input.nearestPredator);
+			break;
+			}
+		case 3:{
+			if(max<YELL_FOOD_SEARCHABLE_RADIUS)
+				setDirections(each_input.yellSignalSource,ref,YELL_FOOD_SEARCHABLE_RADIUS);
+			else
+				resetDirections(each_input.yellSignalSource);
+			break;
+			}
+		case 4:{
+			if(max<YELL_RUN_SEARCHABLE_RADIUS)
+				setDirections(each_input.runSignalSource,ref,YELL_RUN_SEARCHABLE_RADIUS);
+			else
+				resetDirections(each_input.yellSignalSource);
+			break;
+			}
+		case 4:{
+			if(max<MATE_SEARCHABLE_RADIUS)
+				setDirections(each_input.nearestMate,ref,MATE_SEARCHABLE_RADIUS);
+			else
+				resetDirections(each_input.yellSignalSource);
+			break;
+			}
+		}
+	}
+	void setDirections(Direction direction,Location location,double normalization_factor)
+	{
+		direction.setEast(computeEast(location)/normalization_factor);
+		direction.setNorth(computeNorth(location)/normalization_factor);
+		direction.setSouth(computeSouth(location)/normalization_factor);
+		direction.setWest(computeWest(location)/normalization_factor);
+	}
+	
+	double computeSouth(Location location)
+	{
+		if(location.y>y)
+		{
+			return location.y-y;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	double computeNorth(Location location)
+	{
+		if(location.y<y)
+		{
+			return -1*(location.y-y);
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	double computeEast(Location location)
+	{
+		if(location.x>x)
+		{
+			return location.x-x;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	double computeWest(Location location)
+	{
+		if(location.x>x)
+		{
+			return location.x-x;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	void resetDirections(Direction direction)
+	{
+		direction.setEast(0);
+		direction.setWest(0);
+		direction.setNorth(0);
+		direction.setSouth(0);
 	}
 	
 	double computeDistance(Location temp)
