@@ -12,8 +12,8 @@ import org.neuroph.nnet.learning.BackPropagation;
 
 public class AnimatBrainNN implements LearningEventListener{
 
-	private static final int NO_OF_INPUTS = 21;
-	private static final int NO_OF_OUTPUTS = 8;
+	//private static final int NO_OF_INPUTS = 21;
+//	private static final int NO_OF_OUTPUTS = 8;
 	static final int FOOD_SEARCHABLE_RADIUS = 100;
 	static final int PREDATOR_SEARCHABLE_RADIUS = 100;
 	static final int YELL_FOOD_SEARCHABLE_RADIUS = 300;
@@ -66,35 +66,35 @@ public class AnimatBrainNN implements LearningEventListener{
 		return networkInput;
 	}
 	
-	public double[] setWeights(Animat animat)
-	{
-		double[] weights = new double[NO_OF_INPUTS];
-		//set weights for Nearest Food
-		setWeightsIndex(getNearest(AnimatPanel.foodList, animat),animat, weights, 0);
-		
-		//setWeights for Predator
-		setWeightsIndex(getNearest(AnimatPanel.predatorList, animat), animat, weights, 4);
-		
-		//set Weights for Mate
-		if(animat.color == Color.BLUE)
-			setWeightsIndex(getNearest(AnimatPanel.femaleAnimat, animat), animat, weights, 8);
-		else if(animat.color == Color.PINK)
-			setWeightsIndex(getNearest(AnimatPanel.maleAnimat, animat), animat, weights, 8);
-		
-		//set Weights for Yell Food
-		setWeightsIndex(getNearest(AnimatPanel.yellFoodSource, animat), animat, weights, 12);
-		
-		//set Weights for Yell Run
-		setWeightsIndex(getNearest(AnimatPanel.yellPredatorSource, animat), animat, weights, 16);
-		
-		if(animat.hungerValue>0.2)
-			weights[20] = animat.hungerValue;
-		else
-			weights[20] = 0;
-		
-		return weights;
-	}
-	
+//	public double[] setWeights(Animat animat)
+//	{
+//		double[] weights = new double[NO_OF_INPUTS];
+//		//set weights for Nearest Food
+//		setWeightsIndex(getNearest(AnimatPanel.foodList, animat),animat, weights, 0);
+//		
+//		//setWeights for Predator
+//		setWeightsIndex(getNearest(AnimatPanel.predatorList, animat), animat, weights, 4);
+//		
+//		//set Weights for Mate
+//		if(animat.color == Color.BLUE)
+//			setWeightsIndex(getNearest(AnimatPanel.femaleAnimat, animat), animat, weights, 8);
+//		else if(animat.color == Color.PINK)
+//			setWeightsIndex(getNearest(AnimatPanel.maleAnimat, animat), animat, weights, 8);
+//		
+//		//set Weights for Yell Food
+//		setWeightsIndex(getNearest(AnimatPanel.yellFoodSource, animat), animat, weights, 12);
+//		
+//		//set Weights for Yell Run
+//		setWeightsIndex(getNearest(AnimatPanel.yellPredatorSource, animat), animat, weights, 16);
+//		
+//		if(animat.hungerValue>0.2)
+//			weights[20] = animat.hungerValue;
+//		else
+//			weights[20] = 0;
+//		
+//		return weights;
+//	}
+//	
 	public boolean[] run(Animat animat)
 	{
 		//generate input array
@@ -116,43 +116,43 @@ public class AnimatBrainNN implements LearningEventListener{
 		return gettingMaxIndicesFromOutput(networkOutput);
 	}
 	
-	void setWeightsIndex(Location loc, Animat animat, double[] weights, int startIndex)
-	{
-		if(loc==null)
-			return;
-		
-		double foodNorth = computeNorth(loc, animat);
-		if(foodNorth!=0)
-		{
-			weights[startIndex] = 1/foodNorth;
-		}
-		else
-			weights[startIndex] = 0;
-		
-		double foodSouth = computeSouth(loc, animat);
-		if(foodSouth!=0)
-		{
-			weights[startIndex+1] = 1/foodSouth;
-		}
-		else
-			weights[startIndex+1] = 0;
-		
-		double foodWest = computeWest(loc, animat);
-		if(foodWest!=0)
-		{
-			weights[startIndex+2] = 1/foodWest;
-		}
-		else
-			weights[startIndex+2] = 0;
-		
-		double foodEast = computeEast(loc, animat);
-		if(foodEast!=0)
-		{
-			weights[startIndex+3] = 1/foodEast;
-		}
-		else
-			weights[startIndex+3] = 0;
-	}
+//	void setWeightsIndex(Location loc, Animat animat, double[] weights, int startIndex)
+//	{
+//		if(loc==null)
+//			return;
+//		
+//		double foodNorth = computeNorth(loc, animat);
+//		if(foodNorth!=0)
+//		{
+//			weights[startIndex] = 1/foodNorth;
+//		}
+//		else
+//			weights[startIndex] = 0;
+//		
+//		double foodSouth = computeSouth(loc, animat);
+//		if(foodSouth!=0)
+//		{
+//			weights[startIndex+1] = 1/foodSouth;
+//		}
+//		else
+//			weights[startIndex+1] = 0;
+//		
+//		double foodWest = computeWest(loc, animat);
+//		if(foodWest!=0)
+//		{
+//			weights[startIndex+2] = 1/foodWest;
+//		}
+//		else
+//			weights[startIndex+2] = 0;
+//		
+//		double foodEast = computeEast(loc, animat);
+//		if(foodEast!=0)
+//		{
+//			weights[startIndex+3] = 1/foodEast;
+//		}
+//		else
+//			weights[startIndex+3] = 0;
+//	}
 	
 	public Location getNearest(ArrayList<?> input, Animat animat)
 	{
