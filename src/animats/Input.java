@@ -14,6 +14,7 @@ public class Input {
 		System.out.println("Mate"+nearestMate.display());
 		System.out.println("YELL Food"+yellSignalSource.display());
 		System.out.println("RUN"+runSignalSource.display());
+		System.out.println("Hunger Value:"+hungerSignal);
 		System.out.println("--------------------------*******-----------------");
 	}
 }

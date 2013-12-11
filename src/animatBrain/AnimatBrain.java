@@ -38,7 +38,7 @@ public class AnimatBrain implements LearningEventListener{
         learningRule.addListener(this);
         
         // set learning rate and max error
-        learningRule.setLearningRate(0.2);
+        learningRule.setLearningRate(0.1);
         learningRule.setMaxError(0.01);
         
         System.out.println("Training network...");

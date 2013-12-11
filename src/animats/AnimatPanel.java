@@ -73,7 +73,7 @@ public class AnimatPanel extends JPanel implements ActionListener{
 	public void addPredator()
 	{
 		Animat newAnimat = new Animat(Color.RED,35,this,10,10,getWidth(), getHeight(), 0.0);
-		animats.add(newAnimat);
+		//animats.add(newAnimat);
 		predatorList.add(newAnimat);
 	}
 
