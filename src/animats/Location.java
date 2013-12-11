@@ -1,5 +1,7 @@
 package animats;
 
+import javax.swing.JFrame;
+
 public class Location {
 	int x,y;
 	Location()
