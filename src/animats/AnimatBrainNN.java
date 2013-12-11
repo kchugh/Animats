@@ -24,6 +24,8 @@ public class AnimatBrainNN implements LearningEventListener{
 	NeuralNetwork neuralNet;
     DataSet dataSet;
     String trainingSetFileName = "data_sets/animats_data.txt";
+    Animat father;
+	Animat mother;
 	
 	public AnimatBrainNN() {
 		neuralNet =  NeuralNetwork.load("trained_model/NeuralNetAnimats.nnet");
@@ -31,14 +33,27 @@ public class AnimatBrainNN implements LearningEventListener{
 	
 	public double[] getInput(Animat animat)
 	{
+		
 		getAndSetNearest(AnimatPanel.foodList,1, animat);			
 		getAndSetNearest(AnimatPanel.predatorList,2, animat);
 		getAndSetNearest(AnimatPanel.yellFoodSource,3, animat);
 		getAndSetNearest(AnimatPanel.yellPredatorSource,4, animat);
+		
+		
 		if(animat.color==Color.BLUE)
+		{	
+			father = animat;
 			getAndSetNearest(AnimatPanel.femaleAnimat,5, animat);
+			mother = (Animat)getNearest(AnimatPanel.femaleAnimat, animat);
+			System.out.println("Mother:"+mother);
+		}	
 		else if(animat.color==Color.PINK)
+		{
+			mother = animat;
 			getAndSetNearest(AnimatPanel.maleAnimat,5, animat);
+			father = (Animat)getNearest(AnimatPanel.maleAnimat, animat);
+			System.out.println("Mother:"+mother);
+		}
 		each_input.hungerSignal = animat.hungerValue;
 		each_input.display();
 		
@@ -66,6 +81,7 @@ public class AnimatBrainNN implements LearningEventListener{
 		return networkInput;
 	}
 	
+	/*
 	public double[] setWeights(Animat animat)
 	{
 		double[] weights = new double[NO_OF_INPUTS];
@@ -94,17 +110,13 @@ public class AnimatBrainNN implements LearningEventListener{
 		
 		return weights;
 	}
-	
+	*/
 	public boolean[] run(Animat animat)
 	{
 		//generate input array
 		double[] networkInput = getInput(animat);
 		System.out.println("Input:");
 		each_input.display();
-		
-		System.out.println("NN weights:"+Arrays.toString(neuralNet.getWeights()));
-		//find weights based on distance logic
-		//double[] weights = setWeights(animat);
 		
 		//set weights in neural net
 		neuralNet.setInput(networkInput);
@@ -325,7 +337,7 @@ public class AnimatBrainNN implements LearningEventListener{
 		to_be_returned[index]=true;
 		for(int i=0;i<output.length;i++)
 		{
-			if((output[i]/max)>=0.95)
+			if((output[i]/max)>=0.98)
 			{
 				to_be_returned[i]=true;
 			}
