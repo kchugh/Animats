@@ -23,7 +23,12 @@ public class AnimatPanel extends JPanel implements ActionListener{
 	public static ArrayList<Animat> maleAnimat = new ArrayList<Animat>();
 	public static ArrayList<Animat> femaleAnimat = new ArrayList<Animat>();
 	public static ArrayList<Food> yellFoodSource = new ArrayList<Food>();
+<<<<<<< HEAD
 	public static ArrayList<Predator> yellPredatorSource = new ArrayList<Predator>();
+=======
+	public static ArrayList<Animat> yellPredatorSource = new ArrayList<Animat>();
+	public static List<Child> childAnimat = new ArrayList<Child>();
+>>>>>>> master
 	
 	private static Random randomGenerator=new Random(); 
 	public AnimatPanel()
@@ -50,8 +55,15 @@ public class AnimatPanel extends JPanel implements ActionListener{
 			animat.draw(g);
 		for(Food food:foodList)
 			food.draw(g);
+<<<<<<< HEAD
 		for(Predator predator:predatorList)
 			predator.draw(g);
+=======
+		for(Child child:childAnimat)
+			child.draw(g);
+		for(Food yellSource: yellFoodSource)
+			yellSource.drawYell(g);
+>>>>>>> master
 	}
 	
 	public void addMalePrey()

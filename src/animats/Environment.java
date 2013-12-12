@@ -1,6 +1,10 @@
 package animats;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 @SuppressWarnings("serial")
 public class Environment extends JFrame{
 	
+	public static PrintWriter logger;
 	static final int MOVE_DELAY = 20;
 	AnimatPanel animatPanelContainer = new AnimatPanel();
 	FoodPanel foodPanelContainer = new FoodPanel();
@@ -77,6 +82,14 @@ public class Environment extends JFrame{
 		getContentPane().add(buttonPanel);
 		//pack();
 		new Timer(MOVE_DELAY, animatPanelContainer).start();
+		
+		try {
+			logger = new PrintWriter("logging/animat-actions.txt","UTF-8");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -84,7 +97,7 @@ public class Environment extends JFrame{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new Environment().setVisible(true);	
+				new Environment().setVisible(true);
 			}
 		});
 	}
