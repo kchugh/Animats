@@ -12,13 +12,13 @@ import org.neuroph.nnet.learning.BackPropagation;
 
 public class AnimatBrainNN implements LearningEventListener{
 
-	private static final int NO_OF_INPUTS = 21;
+	private static final int NO_OF_INPUTS = 22;
 	private static final int NO_OF_OUTPUTS = 8;
-	static final int FOOD_SEARCHABLE_RADIUS = 100;
-	static final int PREDATOR_SEARCHABLE_RADIUS = 100;
-	static final int YELL_FOOD_SEARCHABLE_RADIUS = 300;
-	static final int YELL_RUN_SEARCHABLE_RADIUS = 300;
-	static final int MATE_SEARCHABLE_RADIUS=25;
+	static final int FOOD_SEARCHABLE_RADIUS = 50;
+	static final int PREDATOR_SEARCHABLE_RADIUS = 50;
+	static final int YELL_FOOD_SEARCHABLE_RADIUS = 150;
+	static final int YELL_RUN_SEARCHABLE_RADIUS = 150;
+	static final int MATE_SEARCHABLE_RADIUS=100;
 	
 	Input each_input = new Input();
 	NeuralNetwork neuralNet;
@@ -29,6 +29,9 @@ public class AnimatBrainNN implements LearningEventListener{
 	
 	public AnimatBrainNN() {
 		neuralNet =  NeuralNetwork.load("trained_model/NeuralNetAnimats.nnet");
+	}
+	public AnimatBrainNN(String filename) {
+		neuralNet =  NeuralNetwork.load(filename);
 	}
 	
 	public double[] getInput(Animat animat)
@@ -55,7 +58,7 @@ public class AnimatBrainNN implements LearningEventListener{
 			System.out.println("Mother:"+mother);
 		}
 		each_input.hungerSignal = animat.hungerValue;
-		each_input.display();
+		//each_input.display();
 		
 		double[] networkInput = {each_input.nearestFood.north,
 				each_input.nearestFood.south,
@@ -77,7 +80,8 @@ public class AnimatBrainNN implements LearningEventListener{
 				each_input.runSignalSource.south,
 				each_input.runSignalSource.west,
 				each_input.runSignalSource.east,
-				animat.hungerValue};
+				animat.hungerValue,
+				animat.mateValue};
 		return networkInput;
 	}
 	
@@ -124,6 +128,11 @@ public class AnimatBrainNN implements LearningEventListener{
 		neuralNet.calculate();
 		double[] networkOutput = neuralNet.getOutput();
 		System.out.println("Output:"+Arrays.toString(networkOutput));
+		if(AnimatPanel.motherChildMap.containsKey(animat))
+		{
+			Child childern=AnimatPanel.motherChildMap.get(animat);
+			childern.write(networkInput, networkOutput);
+		}
 		
 		return gettingMaxIndicesFromOutput(networkOutput);
 	}
@@ -318,6 +327,8 @@ public class AnimatBrainNN implements LearningEventListener{
 	
 	double computeDistance(Location temp, Animat animat)
 	{
+		if(temp==null)
+			return Double.MAX_VALUE;
 		return Math.sqrt((Math.pow((animat.x-temp.x),2)+Math.pow((animat.y-temp.y),2)));
 	}
 	

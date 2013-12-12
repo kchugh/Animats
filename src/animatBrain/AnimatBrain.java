@@ -24,7 +24,7 @@ public class AnimatBrain implements LearningEventListener{
 	{
 		System.out.println("Creating training set...");
         String trainingSetFileName = "data_sets/animats_data.txt";
-        int inputsCount = 21;
+        int inputsCount = 22;
         int outputsCount = 8;
         		
         DataSet dataSet = DataSet.createFromFile(trainingSetFileName, inputsCount, outputsCount, "\t");
@@ -39,7 +39,7 @@ public class AnimatBrain implements LearningEventListener{
         
         // set learning rate and max error
         learningRule.setLearningRate(0.1);
-        learningRule.setMaxError(0.025);
+        learningRule.setMaxError(0.00001);
         
         System.out.println("Training network...");
         // train the network with training set

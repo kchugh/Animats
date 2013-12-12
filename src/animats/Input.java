@@ -7,6 +7,7 @@ public class Input {
 	Direction yellSignalSource=new Direction();
 	Direction runSignalSource=new Direction();
 	double hungerSignal=0.0;
+	int mateSignal=0;
 	void display()
 	{
 		System.out.println("Food"+nearestFood.display());
@@ -15,6 +16,7 @@ public class Input {
 		System.out.println("YELL Food"+yellSignalSource.display());
 		System.out.println("RUN"+runSignalSource.display());
 		System.out.println("Hunger Value:"+hungerSignal);
+		System.out.println("Mating Value:"+mateSignal);
 		System.out.println("--------------------------*******-----------------");
 	}
 }

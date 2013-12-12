@@ -32,14 +32,14 @@ public class Food extends Location{
 		int xCenter = this.x+(SIZE/2);
 		int yCenter = this.y+(SIZE/2);
 		g.setColor(Color.BLACK);
-		g.drawOval(xCenter-50, yCenter-50, 100, 100);
+		g.drawOval(xCenter-AnimatBrainNN.FOOD_SEARCHABLE_RADIUS, yCenter-AnimatBrainNN.FOOD_SEARCHABLE_RADIUS, 2*AnimatBrainNN.FOOD_SEARCHABLE_RADIUS, 2*AnimatBrainNN.FOOD_SEARCHABLE_RADIUS);
 		
-		g.drawString(x+""+y, x, y);
+		g.drawString(""+this.amount, x, y);
 	}
 	
 	public void drawYell(Graphics g)
 	{
 		g.setColor(Color.MAGENTA);
-		g.drawOval(x+(SIZE/2)-150, y+(SIZE/2)-150, 300, 300);
+		g.drawOval(x+(SIZE/2)-AnimatBrainNN.YELL_FOOD_SEARCHABLE_RADIUS, y+(SIZE/2)-AnimatBrainNN.YELL_FOOD_SEARCHABLE_RADIUS, 2*AnimatBrainNN.YELL_FOOD_SEARCHABLE_RADIUS, 2*AnimatBrainNN.YELL_FOOD_SEARCHABLE_RADIUS);
 	}
 }

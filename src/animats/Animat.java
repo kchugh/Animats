@@ -18,6 +18,9 @@ public class Animat extends Location {
 	long animatID;
 	Color color;
 	static final int SPEED = 1;
+	static final double HUNGERVALUE_REDUCTION_RATE = 0.0005;
+	static final double HUNGERVALUE_INCREMENT_RATE = 0.0005;
+	static final double FOOD_REDUCTION_RATE =0.005;
 	static final int Allowed_Distance=5;
 	static final int Allowed_Distance_Animat=30;
 	static final int[] directionX={1,1,-1,0,-1,1,0,-1};
@@ -29,6 +32,7 @@ public class Animat extends Location {
 	int maxX, maxY;
 	int speedX = SPEED, speedY = SPEED;
 	double hungerValue = 0.0;
+	int mateValue=0;
 	
 	AnimatBrainNN adultBrainNN; 
 	static long animatObj = 0;
@@ -36,7 +40,7 @@ public class Animat extends Location {
 	
 	
 	JPanel panel;
-	Animat(Color c, int size, JPanel panel, int x, int y, int maxX, int maxY, double hungerValue)
+	Animat(Color c, int size, JPanel panel, int x, int y, int maxX, int maxY, double hungerValue,int mateValue)
 	{
 		this.color = c;
 		this.size = size;
@@ -46,13 +50,25 @@ public class Animat extends Location {
 		this.maxX = maxX;
 		this.maxY = maxY;
 		this.hungerValue = hungerValue;
-		
+		this.mateValue=mateValue;
 		adultBrainNN = new AnimatBrainNN();
 		this.animatID = animatObj++;
+	}
+	public void useDifferentBrain(AnimatBrainNN newBrain)
+	{
+		adultBrainNN=newBrain;
 	}
 	public void setBounds(int maxX, int maxY)
 	{
 		this.maxX = maxX; this.maxY = maxY;
+	}
+	public void incrementHunger()
+	{
+		this.hungerValue+=HUNGERVALUE_INCREMENT_RATE;
+		if(hungerValue>1)
+		{
+			hungerValue=1;
+		}
 	}
 	
 	public void moveAnimat()
@@ -62,66 +78,181 @@ public class Animat extends Location {
 		//log animat inputm outout, actions
 		
 		Environment.logger.append(animatID+","+Arrays.toString(adultBrainNN.getInput(this))+","+Arrays.toString(outputAction)+"\n");
-		
-		if(outputAction[0]==true)
-		{
-			//move north
-			y -= speedY;
-			if(y <=0)
-				y = maxY;
-			System.out.println("Move North");
-		}
-		else if(outputAction[1]==true)
-		{
-			//move South
-			y += speedY;
-			if(y >=maxY)
-				y = 0;
-			System.out.println("Move South");
-		}
-		else if(outputAction[2]==true)
-		{
-			//move West
-			x -= speedX;
-			if(x <=0)
-				x = maxX;
-			System.out.println("Move West");
-		}
-		else if(outputAction[3]==true)
-		{
-			//move east
-			x += speedX;
-			if(x>=maxX)
-				x = 0;
-			System.out.println("Move East");
-		}
-		
+//		ArrayList<Integer> randomDirection=new ArrayList<Integer>();
+//		for(int i=0;i<4;i++)
+//		{
+//			if(outputAction[i])
+//			{
+//				randomDirection.add(i);
+//			}
+//		}
+//		if(randomDirection.size()>0)
+//		{
+//			int whichDirection=randomDirection.get(AnimatPanel.randomGenerator.nextInt(randomDirection.size()));
+//			switch(whichDirection)
+//			{ case 0:
+//				{
+//					//move north
+//					y -= speedY;
+//					if(y <=0)
+//						y = maxY;
+//					System.out.println("Move North");
+//					incrementHunger();
+//					break;
+//				}
+//				case 1:
+//				{
+//					//move South
+//					y += speedY;
+//					if(y >=maxY)
+//						y = 0;
+//					System.out.println("Move South");
+//					incrementHunger();
+//					break;
+//				}
+//				case 2:
+//				{
+//					//move West
+//					x -= speedX;
+//					if(x <=0)
+//						x = maxX;
+//					System.out.println("Move West");
+//					incrementHunger();
+//					break;
+//				}
+//				case 3:
+//				{
+//					//move east
+//					x += speedX;
+//					if(x>=maxX)
+//						x = 0;
+//					System.out.println("Move East");
+//					incrementHunger();
+//					break;
+//				}
+//			}
+//		}
+	
+			if(outputAction[0]==true)
+	         {
+	                 //move north
+				if(!outputAction[7])
+	                 y -= speedY;
+				else
+					 y -= 2*speedY;
+	                 if(y <=0)
+	                         y = maxY;
+	                 System.out.println("Move North");
+	                 incrementHunger();
+	         }
+	         else if(outputAction[1]==true)
+	         {
+	                 //move South
+	        	 if(!outputAction[7])
+	                 y += speedY;
+	        	 else
+	        		 y+=speedY;
+	                 if(y >=maxY)
+	                         y = 0;
+	                 System.out.println("Move South");
+	                 incrementHunger();
+	         }
+	         else if(outputAction[2]==true)
+	         {
+	                 //move West
+	        	 if(!outputAction[7])
+	                 x -= speedX;
+	        	 else
+	        		 x-=2*speedX;
+	                 if(x <=0)
+	                         x = maxX;
+	                 System.out.println("Move West");
+	                 incrementHunger();
+	         }
+	         else if(outputAction[3]==true)
+	         {
+	                 //move east
+	        	 if(!outputAction[7])
+	                 x += speedX;
+	        	 else
+	        		 x +=2*speedX;
+	                 if(x>=maxX)
+	                         x = 0;
+	                 System.out.println("Move East");
+	                 incrementHunger();
+	         }
+	
 		if(outputAction[4]==true)
 		{
 			//eat food
 			Food food = (Food)adultBrainNN.getNearest(AnimatPanel.foodList, this);
-			eatFood(food);//implement
-			System.out.println("Eat Food");
+			if(food!=null)
+			{	eatFood(food);//implement
+				System.out.println("Eat Food");
+			}
+			else
+			{
+				int randomDir = moveRandom();
+				if(randomDir==1) //move North
+					y -=speedY;
+				else if(randomDir==2) //move South
+					y += speedY;
+				else if(randomDir==3) //move west
+					x -=speedX;
+				else if(randomDir==4) //move east
+					x +=speedX;
+			}
 		}
 		if(outputAction[5]==true)
 		{
+			Food food=(Food)adultBrainNN.getNearest(AnimatPanel.foodList, this);
 			//yell food
-			yellFood((Food)adultBrainNN.getNearest(AnimatPanel.foodList, this));
+			if(food!=null)
+			{	yellFood(food);
 			System.out.println("Yell Food");
+			}
+			else
+			{
+				int randomDir = moveRandom();
+				if(randomDir==1) //move North
+					y -=speedY;
+				else if(randomDir==2) //move South
+					y += speedY;
+				else if(randomDir==3) //move west
+					x -=speedX;
+				else if(randomDir==4) //move east
+					x +=speedX;
+			}
+			
 		}
 		
 		if(outputAction[6]==true)
 		{
 			//mate signal
 			System.out.println("Mate Signal");
-			mate(adultBrainNN.mother);
+			
+			if(adultBrainNN.father!=null&&adultBrainNN.mother!=null&&adultBrainNN.father.mateValue==1&&adultBrainNN.mother.mateValue==1)
+				mate(adultBrainNN.mother);
+			else 
+			{	
+				int randomDir = moveRandom();
+				if(randomDir==1) //move North
+					y -=speedY;
+				else if(randomDir==2) //move South
+					y += speedY;
+				else if(randomDir==3) //move west
+					x -=speedX;
+				else if(randomDir==4) //move east
+					x +=speedX;
+			}
+			
 			//update child mother data structure...to be implented
 		}
 		if(outputAction[7]==true)
 		{
 			//yell run
 			if(AnimatPanel.predatorList!=null || !AnimatPanel.predatorList.isEmpty())
-				yellRun((Animat)adultBrainNN.getNearest(AnimatPanel.predatorList, this));
+				yellRun((Predator)adultBrainNN.getNearest(AnimatPanel.predatorList, this));
 			else 
 			{	
 				int randomDir = moveRandom();
@@ -137,6 +268,7 @@ public class Animat extends Location {
 			System.out.println("Yell Run");
 		}
 	}
+	
 	private int moveRandom()
 	{
 		return (int)Math.random()*(4-1)+1;
@@ -231,6 +363,7 @@ public class Animat extends Location {
 	{
 		g.setColor(color);
 		g.fillOval(x, y, size, size);
+		g.drawString(""+this.hungerValue+","+this.mateValue, this.x,this.y);
 	}
 	
 	public void eatFood(Food food){
@@ -251,12 +384,13 @@ public class Animat extends Location {
 		else
 		{
 			//decrease food
-			food.amount -= 0.10*food.amount;
+			food.amount -= FOOD_REDUCTION_RATE;
 		
 			//decrease hunger value
-			this.hungerValue += 0.01;
-			if(this.hungerValue>=1)
+			this.hungerValue -= HUNGERVALUE_REDUCTION_RATE;
+			if(this.hungerValue<=0)
 			{
+				this.hungerValue=0;
 				int randomDir = moveRandom();
 				if(randomDir==1) //move North
 					y -=speedY;
@@ -273,24 +407,46 @@ public class Animat extends Location {
 	public void yellFood(Food food)
 	{
 		
-		AnimatPanel.yellFoodSource.add(food);
+		if(food.amount<=0)
+		{
+			//remove food from the environment and from yellSource list
+			if(AnimatPanel.foodList.contains(food))
+			{
+				AnimatPanel.foodList.remove(food);
+				System.out.println("Food Removed from Environment");
+			}
+			if(AnimatPanel.yellFoodSource.contains(food))
+			{
+				AnimatPanel.yellFoodSource.remove(food);
+				System.out.println("Food removed from Yell Source");
+			}
+		}
+		else
+		{		System.out.println("******************Food IN YELL**************"+food.amount);
+			if(!AnimatPanel.yellFoodSource.contains(food))
+			
+				AnimatPanel.yellFoodSource.add(food);
+		}
 		
 	}
 	
-	public void yellRun(Animat predator)
+	public void yellRun(Predator predator)
 	{
 		System.out.println("Yell Run Called");
 		if(predator!=null)
 		{
-			System.out.println("Mate Added"+predator.animatID);
+			System.out.println("Predator called"+predator.animatID);
 			AnimatPanel.yellPredatorSource.add(predator);
 		}
 			
 	}
 	public void mate(Animat mother)
 	{	
+		mother.mateValue=0;
 		System.out.println("Mother:"+mother);
-		AnimatPanel.childAnimat.add(new Child(Color.BLUE,20,300,300, this.panel.getWidth(), this.panel.getHeight(), Math.random(), mother));
+		Child child=new Child(Color.BLUE,20,300,300, this.panel.getWidth(), this.panel.getHeight(), Math.random(), mother);
+		AnimatPanel.childAnimat.add(child);
+		AnimatPanel.motherChildMap.put(mother,child);
 		System.out.println("Mating Complete. Child added");
 		//make one animat say mother move in random direction after mating
 		int randomDir = moveRandom();
@@ -302,8 +458,6 @@ public class Animat extends Location {
 			mother.x -=speedX;
 		else if(randomDir==4) //move east
 			mother.x +=speedX;
-		
-		
 	}
 	
 

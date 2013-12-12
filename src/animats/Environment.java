@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 @SuppressWarnings("serial")
 public class Environment extends JFrame{
 	
+	public static int childId=0;
 	public static PrintWriter logger;
 	static final int MOVE_DELAY = 20;
 	AnimatPanel animatPanelContainer = new AnimatPanel();
@@ -38,7 +39,7 @@ public class Environment extends JFrame{
 	
 	JButton addChildPreyButton = new JButton(new AbstractAction("Add Child Prey") {
         public void actionPerformed(ActionEvent e) {
-            animatPanelContainer.addChildPrey();
+            animatPanelContainer.addChildPreyWithTraining(childId++);
         }
     });
 	

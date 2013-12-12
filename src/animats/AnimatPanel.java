@@ -3,6 +3,7 @@ package animats;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.awt.event.ActionEvent;
@@ -19,14 +20,15 @@ public class AnimatPanel extends JPanel implements ActionListener{
 
 	public static List<Animat> animats = new ArrayList<Animat>();
 	public static ArrayList<Food> foodList = new ArrayList<Food>();
-	public static ArrayList<Animat> predatorList = new ArrayList<Animat>();
+	public static ArrayList<Predator> predatorList = new ArrayList<Predator>();
 	public static ArrayList<Animat> maleAnimat = new ArrayList<Animat>();
 	public static ArrayList<Animat> femaleAnimat = new ArrayList<Animat>();
 	public static ArrayList<Food> yellFoodSource = new ArrayList<Food>();
-	public static ArrayList<Animat> yellPredatorSource = new ArrayList<Animat>();
+	public static ArrayList<Predator> yellPredatorSource = new ArrayList<Predator>();
 	public static List<Child> childAnimat = new ArrayList<Child>();
+	public static HashMap<Animat,Child>  motherChildMap = new HashMap<Animat, Child>();
 	
-	private static Random randomGenerator=new Random(); 
+	public static Random randomGenerator=new Random(); 
 	public AnimatPanel()
 	{
 		super();
@@ -53,32 +55,39 @@ public class AnimatPanel extends JPanel implements ActionListener{
 			food.draw(g);
 		for(Child child:childAnimat)
 			child.draw(g);
+		for(Predator predator:predatorList)
+			predator.draw(g);
 		for(Food yellSource: yellFoodSource)
 			yellSource.drawYell(g);
 	}
 	
 	public void addMalePrey()
 	{
-		Animat newAnimat = new Animat(Color.BLUE,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight(), Math.random());
+		Animat newAnimat = new Animat(Color.BLUE,35,this,randomGenerator.nextInt(getWidth()),randomGenerator.nextInt(getHeight()),getWidth(), getHeight(), Math.random(), randomGenerator.nextInt(2));
 		animats.add(newAnimat);
 		maleAnimat.add(newAnimat);	
 	}
 	
 	public void addFemalePrey()
 	{
-		Animat newAnimat = new Animat(Color.PINK,35,this,randomGenerator.nextInt(getWidth()),10,getWidth(), getHeight(), Math.random());
+		Animat newAnimat = new Animat(Color.PINK,35,this,randomGenerator.nextInt(getWidth()),randomGenerator.nextInt(getHeight()),getWidth(), getHeight(), Math.random(), randomGenerator.nextInt(2));
 		animats.add(newAnimat);
 	}
 	
-	public void addChildPrey()
+	public void addChildPrey(Animat mother)
 	{
-		animats.add(new Animat(Color.BLUE,20,this,10,10,getWidth(), getHeight(), Math.random()));
+		childAnimat.add(new Child(Color.BLUE,20,10,10,getWidth(), getHeight(), Math.random(),mother));
 	}
-	
+	public void addChildPreyWithTraining(int childId)
+	{
+		AnimatBrainNN childBrain=new AnimatBrainNN("trained_model/ChildAnimats"+childId+".nnet");
+		Animat trainedChild = new Animat(Color.YELLOW,25,this,randomGenerator.nextInt(getWidth()),randomGenerator.nextInt(getHeight()),getWidth(), getHeight(), Math.random(), 0);
+		trainedChild.useDifferentBrain(childBrain);
+		animats.add(trainedChild);
+	}
 	public void addPredator()
 	{
-		Animat newAnimat = new Animat(Color.RED,35,this,10,10,getWidth(), getHeight(), 0.0);
-		//animats.add(newAnimat);
+		Predator newAnimat = new Predator(Color.RED,35,this,randomGenerator.nextInt(getWidth()),randomGenerator.nextInt(getHeight()),getWidth(), getHeight());
 		predatorList.add(newAnimat);
 	}
 
@@ -98,6 +107,10 @@ public class AnimatPanel extends JPanel implements ActionListener{
 		for(Animat animat : animats)
 		{
 			animat.moveAnimat();
+		}
+		for(Predator predator : predatorList)
+		{
+			predator.moveAnimat();
 		}
 		repaint();	
 	}
