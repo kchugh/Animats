@@ -19,11 +19,11 @@ public class AnimatPanel extends JPanel implements ActionListener{
 
 	public static List<Animat> animats = new ArrayList<Animat>();
 	public static ArrayList<Food> foodList = new ArrayList<Food>();
-	public static ArrayList<Animat> predatorList = new ArrayList<Animat>();
+	public static ArrayList<Predator> predatorList = new ArrayList<Predator>();
 	public static ArrayList<Animat> maleAnimat = new ArrayList<Animat>();
 	public static ArrayList<Animat> femaleAnimat = new ArrayList<Animat>();
 	public static ArrayList<Food> yellFoodSource = new ArrayList<Food>();
-	public static ArrayList<Animat> yellPredatorSource = new ArrayList<Animat>();
+	public static ArrayList<Predator> yellPredatorSource = new ArrayList<Predator>();
 	
 	private static Random randomGenerator=new Random(); 
 	public AnimatPanel()
@@ -50,6 +50,8 @@ public class AnimatPanel extends JPanel implements ActionListener{
 			animat.draw(g);
 		for(Food food:foodList)
 			food.draw(g);
+		for(Predator predator:predatorList)
+			predator.draw(g);
 	}
 	
 	public void addMalePrey()
@@ -72,9 +74,9 @@ public class AnimatPanel extends JPanel implements ActionListener{
 	
 	public void addPredator()
 	{
-		Animat newAnimat = new Animat(Color.RED,35,this,10,10,getWidth(), getHeight(), 0.0);
-		//animats.add(newAnimat);
-		predatorList.add(newAnimat);
+		Predator newPredator = new Predator(Color.RED,35,this,10,10,getWidth(), getHeight());
+		predatorList.add(newPredator);
+		
 	}
 
 	public void addFood()
@@ -91,6 +93,10 @@ public class AnimatPanel extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		for(Animat animat : animats)
+		{
+			animat.moveAnimat();
+		}
+		for(Predator animat : predatorList)
 		{
 			animat.moveAnimat();
 		}

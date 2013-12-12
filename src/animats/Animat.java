@@ -108,7 +108,7 @@ public class Animat extends Location {
 		if(outputAction[7]==true)
 		{
 			//yell run
-			yellRun((Animat)adultBrainNN.getNearest(AnimatPanel.predatorList, this));
+			yellRun((Predator)adultBrainNN.getNearest(AnimatPanel.predatorList, this));
 			System.out.println("Yell Run");
 		}
 	}
@@ -214,7 +214,7 @@ public class Animat extends Location {
 		AnimatPanel.yellFoodSource.add(food);
 	}
 	
-	public void yellRun(Animat predator)
+	public void yellRun(Predator predator)
 	{
 		AnimatPanel.yellPredatorSource.add(predator);
 	}
